@@ -1,7 +1,7 @@
 {
   "name": "nexcrm",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,14 +12,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "lucide-react": "^0.308.0",
-    "recharts": "^2.10.3"
+    "recharts": "^2.10.3",
+    "lucide-react": "^0.294.0",
+    "clsx": "^2.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.2.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
     "vite": "^5.0.8",
     "tailwindcss": "^3.3.6",
-    "postcss": "^8.4.32",
+    "postcss": "^8.4.31",
     "autoprefixer": "^10.4.16"
   }
 }

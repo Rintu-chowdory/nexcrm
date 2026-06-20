@@ -1,53 +1,67 @@
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Kanban, Briefcase, Activity, Settings } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom'
+import { BarChart3, Users, Zap, Briefcase, Clock, Settings, Zap as Logo } from 'lucide-react'
 
-export default function Sidebar() {
+const Sidebar = () => {
+  const location = useLocation()
+
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/contacts', label: 'Contacts', icon: Users },
-    { path: '/pipeline', label: 'Pipeline', icon: Kanban },
-    { path: '/deals', label: 'Deals', icon: Briefcase },
-    { path: '/activities', label: 'Activities', icon: Activity },
-    { path: '/settings', label: 'Settings', icon: Settings },
-  ];
+    { path: '/', icon: BarChart3, label: 'Dashboard' },
+    { path: '/contacts', icon: Users, label: 'Contacts' },
+    { path: '/pipeline', icon: Zap, label: 'Pipeline' },
+    { path: '/deals', icon: Briefcase, label: 'Deals' },
+    { path: '/activities', icon: Clock, label: 'Activities' },
+    { path: '/settings', icon: Settings, label: 'Settings' },
+  ]
+
+  const isActive = (path) => location.pathname === path
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-navy-light border-r border-blue-accent/20 p-6 flex flex-col">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-blue-accent">NexCRM</h1>
-        <p className="text-gray-400 text-sm">Sales Management</p>
+    <div className="w-64 bg-navy-950 border-r border-blue-900 flex flex-col h-screen">
+      {/* Logo */}
+      <div className="p-6 border-b border-blue-900">
+        <div className="flex items-center gap-2 mb-2">
+          <Logo className="w-8 h-8 text-blue-500" />
+          <span className="text-xl font-bold text-white">NexCRM</span>
+        </div>
+        <p className="text-sm text-gray-400">Customer Relations</p>
       </div>
 
-      <nav className="flex-1 space-y-2">
-        {navItems.map(({ path, label, icon: Icon }) => (
-          <NavLink
-            key={path}
-            to={path}
-            className={({ isActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive
-                  ? 'bg-blue-accent text-white'
-                  : 'text-gray-300 hover:text-white hover:bg-navy'
-              }`
-            }
-          >
-            <Icon size={20} />
-            <span>{label}</span>
-          </NavLink>
-        ))}
+      {/* Navigation */}
+      <nav className="flex-1 px-4 py-6">
+        {navItems.map((item) => {
+          const Icon = item.icon
+          const active = isActive(item.path)
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
+                active
+                  ? 'bg-blue-600 text-white'
+                  : 'text-gray-300 hover:bg-navy-900'
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          )
+        })}
       </nav>
 
-      <div className="border-t border-blue-accent/20 pt-4">
-        <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-10 h-10 rounded-full bg-blue-accent flex items-center justify-center">
-            <span className="text-white font-bold">A</span>
+      {/* Footer */}
+      <div className="p-6 border-t border-blue-900">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+            <span className="text-sm font-bold">JD</span>
           </div>
           <div>
-            <p className="text-sm font-semibold">Alice Johnson</p>
-            <p className="text-xs text-gray-400">Sales Manager</p>
+            <p className="text-sm font-medium">John Doe</p>
+            <p className="text-xs text-gray-400">Admin</p>
           </div>
         </div>
       </div>
-    </aside>
-  );
+    </div>
+  )
 }
+
+export default Sidebar

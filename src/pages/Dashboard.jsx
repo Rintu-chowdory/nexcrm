@@ -1,104 +1,186 @@
-import { mockKPIs, mockRecentActivity, mockChartData, mockMonthlyData } from '../data/mockData';
-import { TrendingUp, Users, DollarSign, Target } from 'lucide-react';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { TrendingUp, Users, Briefcase, DollarSign, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 
-function KPICard({ icon: Icon, label, value, trend }) {
-  return (
-    <div className="bg-navy-light border border-blue-accent/30 rounded-lg p-6 hover:border-blue-accent/60 transition-colors">
-      <div className="flex items-start justify-between mb-4">
-        <Icon className="text-blue-accent" size={24} />
-        {trend && <span className="text-green-400 text-sm flex items-center gap-1"><TrendingUp size={16} />{trend}%</span>}
+const Dashboard = () => {
+  const kpiData = [
+    {
+      title: 'Total Revenue',
+      value: '$487,245',
+      change: '+12.5%',
+      trend: 'up',
+      icon: DollarSign,
+      bgColor: 'bg-gradient-to-br from-emerald-600 to-emerald-800',
+    },
+    {
+      title: 'Active Deals',
+      value: '42',
+      change: '+5.2%',
+      trend: 'up',
+      icon: Briefcase,
+      bgColor: 'bg-gradient-to-br from-blue-600 to-blue-800',
+    },
+    {
+      title: 'Total Contacts',
+      value: '1,234',
+      change: '+8.1%',
+      trend: 'up',
+      icon: Users,
+      bgColor: 'bg-gradient-to-br from-purple-600 to-purple-800',
+    },
+    {
+      title: 'Win Rate',
+      value: '68%',
+      change: '-2.3%',
+      trend: 'down',
+      icon: TrendingUp,
+      bgColor: 'bg-gradient-to-br from-orange-600 to-orange-800',
+    },
+  ]
+
+  const chartData = [
+    { month: 'Jan', revenue: 42000, deals: 24 },
+    { month: 'Feb', revenue: 35000, deals: 18 },
+    { month: 'Mar', revenue: 48000, deals: 32 },
+    { month: 'Apr', revenue: 52000, deals: 28 },
+    { month: 'May', revenue: 61000, deals: 35 },
+    { month: 'Jun', revenue: 55000, deals: 30 },
+  ]
+
+  const activities = [
+    { id: 1, type: 'deal', title: 'Deal closed with Acme Corp', time: '2 hours ago', user: 'Sarah Chen' },
+    { id: 2, type: 'contact', title: 'New contact added: Mike Johnson', time: '4 hours ago', user: 'John Doe' },
+    { id: 3, type: 'call', title: 'Call completed with TechStart Inc', time: '6 hours ago', user: 'Emma Wilson' },
+    { id: 4, type: 'email', title: 'Email sent to prospective client', time: '8 hours ago', user: 'Alex Kumar' },
+  ]
+
+  const KPICard = ({ title, value, change, trend, icon: Icon, bgColor }) => (
+    <div className="bg-navy-800 border border-blue-900 rounded-lg p-6">
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-gray-400 text-sm mb-2">{title}</p>
+          <p className="text-3xl font-bold text-white mb-3">{value}</p>
+          <div className="flex items-center gap-1">
+            {trend === 'up' ? (
+              <ArrowUpRight className="w-4 h-4 text-green-500" />
+            ) : (
+              <ArrowDownRight className="w-4 h-4 text-red-500" />
+            )}
+            <span className={trend === 'up' ? 'text-green-500' : 'text-red-500'}>
+              {change}
+            </span>
+          </div>
+        </div>
+        <div className={`${bgColor} p-4 rounded-lg`}>
+          <Icon className="w-6 h-6 text-white" />
+        </div>
       </div>
-      <p className="text-gray-400 text-sm mb-2">{label}</p>
-      <p className="text-2xl font-bold text-white">
-        {typeof value === 'number' && value > 999 ? `${(value / 1000).toFixed(1)}K` : value}
-        {label.includes('Rate') ? '%' : ''}
-      </p>
     </div>
-  );
-}
-
-function ActivityItem({ activity }) {
-  const typeEmoji = {
-    call: '📞',
-    email: '📧',
-    meeting: '📅',
-  };
+  )
 
   return (
-    <div className="flex gap-4 pb-4 border-b border-blue-accent/20 last:border-0">
-      <div className="text-2xl">{typeEmoji[activity.type]}</div>
-      <div className="flex-1">
-        <p className="font-semibold text-white">{activity.title}</p>
-        <p className="text-sm text-gray-400">{activity.description}</p>
-        <p className="text-xs text-gray-500 mt-1">{new Date(activity.timestamp).toLocaleDateString()}</p>
-      </div>
-    </div>
-  );
-}
-
-export default function Dashboard() {
-  return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-gray-400">Welcome back! Here's your sales overview.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <KPICard icon={Users} label="Total Contacts" value={mockKPIs.totalContacts} trend={12} />
-        <KPICard icon={Briefcase} label="Active Deals" value={mockKPIs.activeDeals} trend={8} />
-        <KPICard icon={DollarSign} label="Total Revenue" value={mockKPIs.revenue} trend={15} />
-        <KPICard icon={Target} label="Win Rate" value={mockKPIs.winRate} trend={5} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-navy-light border border-blue-accent/30 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-white mb-6">Pipeline Overview</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={mockChartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#3b82f6" opacity={0.1} />
-              <XAxis dataKey="stage" stroke="#9ca3af" style={{ fontSize: '12px' }} />
-              <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#161b22', border: '1px solid #3b82f6' }}
-                formatter={(value) => `$${value / 1000}K`}
-              />
-              <Bar dataKey="value" fill="#3b82f6" radius={[8, 8, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+    <div className="p-8 bg-navy-900 min-h-screen">
+      <div className="max-w-7xl">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">Dashboard</h1>
+          <p className="text-gray-400">Welcome back! Here's your business overview.</p>
         </div>
 
-        <div className="bg-navy-light border border-blue-accent/30 rounded-lg p-6">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {kpiData.map((kpi) => (
+            <KPICard key={kpi.title} {...kpi} />
+          ))}
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          {/* Revenue Chart */}
+          <div className="lg:col-span-2 bg-navy-800 border border-blue-900 rounded-lg p-6">
+            <h2 className="text-xl font-bold text-white mb-4">Revenue Trend</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1e3a8a" />
+                <XAxis stroke="#9ca3af" />
+                <YAxis stroke="#9ca3af" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1a202c',
+                    border: '1px solid #1e40af',
+                    borderRadius: '8px'
+                  }}
+                  labelStyle={{ color: '#fff' }}
+                />
+                <Legend />
+                <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6' }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="bg-navy-800 border border-blue-900 rounded-lg p-6">
+            <h2 className="text-xl font-bold text-white mb-4">Pipeline Summary</h2>
+            <div className="space-y-4">
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-300">Prospecting</span>
+                  <span className="text-white font-semibold">8</span>
+                </div>
+                <div className="w-full bg-navy-700 rounded-full h-2">
+                  <div className="bg-blue-500 h-2 rounded-full" style={{ width: '30%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-300">Qualification</span>
+                  <span className="text-white font-semibold">12</span>
+                </div>
+                <div className="w-full bg-navy-700 rounded-full h-2">
+                  <div className="bg-purple-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-300">Negotiation</span>
+                  <span className="text-white font-semibold">15</span>
+                </div>
+                <div className="w-full bg-navy-700 rounded-full h-2">
+                  <div className="bg-green-500 h-2 rounded-full" style={{ width: '55%' }}></div>
+                </div>
+              </div>
+              <div>
+                <div className="flex justify-between mb-2">
+                  <span className="text-gray-300">Closed</span>
+                  <span className="text-white font-semibold">7</span>
+                </div>
+                <div className="w-full bg-navy-700 rounded-full h-2">
+                  <div className="bg-emerald-500 h-2 rounded-full" style={{ width: '25%' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Activity Feed */}
+        <div className="bg-navy-800 border border-blue-900 rounded-lg p-6">
           <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
-          <div className="space-y-2">
-            {mockRecentActivity.map((activity) => (
-              <div key={activity.id} className="pb-3 border-b border-blue-accent/20 last:border-0">
-                <p className="text-sm font-semibold text-white">{activity.user}</p>
-                <p className="text-xs text-gray-400">{activity.action} <span className="text-blue-accent">{activity.target}</span></p>
-                <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
+          <div className="space-y-4">
+            {activities.map((activity) => (
+              <div key={activity.id} className="flex items-start gap-4 pb-4 border-b border-blue-900 last:border-b-0">
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                  <span className="text-sm font-bold text-white">{activity.user.charAt(0)}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-white font-medium">{activity.title}</p>
+                  <p className="text-sm text-gray-400">{activity.user} • {activity.time}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      <div className="bg-navy-light border border-blue-accent/30 rounded-lg p-6">
-        <h2 className="text-xl font-bold text-white mb-6">Monthly Revenue Trend</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={mockMonthlyData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#3b82f6" opacity={0.1} />
-            <XAxis dataKey="month" stroke="#9ca3af" style={{ fontSize: '12px' }} />
-            <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
-            <Tooltip
-              contentStyle={{ backgroundColor: '#161b22', border: '1px solid #3b82f6' }}
-              formatter={(value) => `$${value / 1000}K`}
-            />
-            <Legend />
-            <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6', r: 5 }} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
     </div>
-  );
+  )
 }
+
+export default Dashboard
