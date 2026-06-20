@@ -1,206 +1,146 @@
-import { useState } from 'react'
-import { Users, Zap, Bell, Lock, Plus, Trash2, MoreVertical } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Save, Key } from 'lucide-react'
 
-const Settings = () => {
-  const [activeTab, setActiveTab] = useState('team')
+export default function Settings() {
+  const [groqKey, setGroqKey] = useState('')
+  const [keySaved, setKeySaved] = useState(false)
+  const [notifications, setNotifications] = useState({
+    emailAlerts: true,
+    dealUpdates: true,
+    taskReminders: false,
+  })
+  const [display, setDisplay] = useState({
+    theme: 'dark',
+    language: 'English',
+    timezone: 'UTC-5',
+  })
 
-  const [teamMembers, setTeamMembers] = useState([
-    { id: 1, name: 'John Doe', email: 'john@nexcrm.com', role: 'Admin', status: 'active' },
-    { id: 2, name: 'Sarah Chen', email: 'sarah@nexcrm.com', role: 'Manager', status: 'active' },
-    { id: 3, name: 'Emma Wilson', email: 'emma@nexcrm.com', role: 'Sales Rep', status: 'active' },
-    { id: 4, name: 'Alex Kumar', email: 'alex@nexcrm.com', role: 'Sales Rep', status: 'active' },
-  ])
+  useEffect(() => {
+    const saved = localStorage.getItem('nexcrm_groq_key')
+    if (saved) setGroqKey(saved)
+  }, [])
 
-  const integrations = [
-    { id: 1, name: 'Slack', icon: '💬', status: 'connected', description: 'Sync updates to Slack channels' },
-    { id: 2, name: 'Google Calendar', icon: '📅', status: 'connected', description: 'Sync meetings and events' },
-    { id: 3, name: 'Stripe', icon: '💳', status: 'connected', description: 'Track payment transactions' },
-    { id: 4, name: 'Mailchimp', icon: '📧', status: 'not-connected', description: 'Email campaign automation' },
-    { id: 5, name: 'Zapier', icon: '⚡', status: 'not-connected', description: 'Workflow automation' },
-    { id: 6, name: 'GitHub', icon: '🐙', status: 'connected', description: 'Project management integration' },
-  ]
-
-  const removeMember = (id) => {
-    setTeamMembers(teamMembers.filter(member => member.id !== id))
+  const handleSaveGroqKey = () => {
+    localStorage.setItem('nexcrm_groq_key', groqKey)
+    setKeySaved(true)
+    setTimeout(() => setKeySaved(false), 2000)
   }
 
-  const TabButton = ({ tab, label, icon: Icon }) => (
-    <button
-      onClick={() => setActiveTab(tab)}
-      className={`flex items-center gap-2 px-6 py-3 font-medium transition-colors ${
-        activeTab === tab
-          ? 'text-blue-400 border-b-2 border-blue-400'
-          : 'text-gray-400 hover:text-white'
-      }`}
-    >
-      <Icon className="w-5 h-5" />
-      {label}
-    </button>
-  )
-
   return (
-    <div className="p-8 bg-navy-900 min-h-screen">
-      <div className="max-w-4xl">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Settings</h1>
-          <p className="text-gray-400">Manage your team and integrations</p>
+    <div className="p-8 max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-white">Settings</h1>
+        <p className="text-gray-400 mt-2">Manage your account preferences and configurations</p>
+      </div>
+
+      <div className="space-y-6">
+
+        {/* AI Configuration */}
+        <div className="bg-navy-900 border border-blue-500/30 rounded-xl p-6">
+          <div className="flex items-center gap-2 mb-1">
+            <Key className="w-5 h-5 text-blue-400" />
+            <h2 className="text-xl font-bold text-white">AI Configuration</h2>
+            <span className="ml-2 bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded">AI</span>
+          </div>
+          <p className="text-gray-400 text-sm mb-4">Add your Groq API key to enable the AI Email Composer</p>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              value={groqKey}
+              onChange={(e) => setGroqKey(e.target.value)}
+              placeholder="gsk_..."
+              className="flex-1 bg-navy-800 border border-navy-600 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+            />
+            <button
+              onClick={handleSaveGroqKey}
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg transition-colors"
+            >
+              {keySaved ? 'Saved ✓' : 'Save Key'}
+            </button>
+          </div>
+          {groqKey && (
+            <p className="text-green-400 text-xs mt-2">✓ API key is set — AI Composer is ready</p>
+          )}
+          <p className="text-gray-500 text-xs mt-2">
+            Get a free key at{' '}
+            <a href="https://console.groq.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">
+              console.groq.com
+            </a>
+          </p>
         </div>
 
-        {/* Tabs */}
-        <div className="flex gap-2 border-b border-blue-900 mb-8">
-          <TabButton tab="team" label="Team Members" icon={Users} />
-          <TabButton tab="integrations" label="Integrations" icon={Zap} />
-          <TabButton tab="notifications" label="Notifications" icon={Bell} />
-          <TabButton tab="security" label="Security" icon={Lock} />
+        {/* Notifications */}
+        <div className="bg-navy-900 border border-navy-700 rounded-xl p-6">
+          <h2 className="text-xl font-bold text-white mb-4">Notifications</h2>
+          <div className="space-y-3">
+            {[
+              { key: 'emailAlerts', label: 'Email alerts for new leads' },
+              { key: 'dealUpdates', label: 'Deal stage update notifications' },
+              { key: 'taskReminders', label: 'Task reminder emails' },
+            ].map(({ key, label }) => (
+              <label key={key} className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={notifications[key]}
+                  onChange={(e) => setNotifications({...notifications, [key]: e.target.checked})}
+                  className="w-4 h-4"
+                />
+                <span className="text-gray-300">{label}</span>
+              </label>
+            ))}
+          </div>
         </div>
 
-        {/* Team Members Tab */}
-        {activeTab === 'team' && (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">Team Members</h2>
-              <button className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
-                <Plus className="w-5 h-5" />
-                Invite Member
-              </button>
+        {/* Display */}
+        <div className="bg-navy-900 border border-navy-700 rounded-xl p-6">
+          <h2 className="text-xl font-bold text-white mb-4">Display</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Theme</label>
+              <select
+                value={display.theme}
+                onChange={(e) => setDisplay({...display, theme: e.target.value})}
+                className="w-full bg-navy-800 border border-navy-600 rounded-lg px-3 py-2 text-white"
+              >
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+              </select>
             </div>
-
-            <div className="space-y-4">
-              {teamMembers.map(member => (
-                <div key={member.id} className="bg-navy-800 border border-blue-900 rounded-lg p-6 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center">
-                      <span className="text-lg font-bold text-white">{member.name.charAt(0)}</span>
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white">{member.name}</h3>
-                      <p className="text-sm text-gray-400">{member.email}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <div>
-                      <p className="text-sm text-gray-300 mb-1">{member.role}</p>
-                      <span className="inline-block px-3 py-1 bg-green-900 text-green-200 text-xs font-medium rounded-full">
-                        {member.status}
-                      </span>
-                    </div>
-                    <button
-                      onClick={() => removeMember(member.id)}
-                      className="text-gray-400 hover:text-red-400 transition-colors"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Language</label>
+              <select
+                value={display.language}
+                onChange={(e) => setDisplay({...display, language: e.target.value})}
+                className="w-full bg-navy-800 border border-navy-600 rounded-lg px-3 py-2 text-white"
+              >
+                <option>English</option>
+                <option>Spanish</option>
+                <option>French</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Timezone</label>
+              <select
+                value={display.timezone}
+                onChange={(e) => setDisplay({...display, timezone: e.target.value})}
+                className="w-full bg-navy-800 border border-navy-600 rounded-lg px-3 py-2 text-white"
+              >
+                <option>UTC-5</option>
+                <option>UTC</option>
+                <option>UTC+1</option>
+              </select>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Integrations Tab */}
-        {activeTab === 'integrations' && (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Integrations</h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {integrations.map(integration => (
-                <div key={integration.id} className="bg-navy-800 border border-blue-900 rounded-lg p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">{integration.icon}</div>
-                      <div>
-                        <h3 className="font-semibold text-white">{integration.name}</h3>
-                        <p className="text-sm text-gray-400">{integration.description}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between mt-4">
-                    <span className={`text-sm font-medium px-3 py-1 rounded-full ${
-                      integration.status === 'connected'
-                        ? 'bg-green-900 text-green-200'
-                        : 'bg-gray-700 text-gray-300'
-                    }`}>
-                      {integration.status === 'connected' ? 'Connected' : 'Not Connected'}
-                    </span>
-                    <button className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                      integration.status === 'connected'
-                        ? 'bg-navy-700 text-gray-300 hover:bg-navy-600'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
-                    }`}>
-                      {integration.status === 'connected' ? 'Configure' : 'Connect'}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Notifications Tab */}
-        {activeTab === 'notifications' && (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Notification Preferences</h2>
-
-            <div className="space-y-4">
-              {[
-                { title: 'Email Notifications', description: 'Receive email updates on deals and activities' },
-                { title: 'Deal Closed Alerts', description: 'Get notified when a deal is closed' },
-                { title: 'New Contact Alerts', description: 'Receive alerts for new contacts added' },
-                { title: 'Activity Reminders', description: 'Reminders for scheduled activities' },
-                { title: 'Weekly Summary', description: 'Receive weekly performance summary' },
-              ].map((pref, idx) => (
-                <div key={idx} className="bg-navy-800 border border-blue-900 rounded-lg p-6 flex items-center justify-between">
-                  <div>
-                    <h3 className="font-semibold text-white">{pref.title}</h3>
-                    <p className="text-sm text-gray-400">{pref.description}</p>
-                  </div>
-                  <label className="flex items-center cursor-pointer">
-                    <input type="checkbox" defaultChecked className="w-5 h-5" />
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Security Tab */}
-        {activeTab === 'security' && (
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-6">Security Settings</h2>
-
-            <div className="space-y-4">
-              <div className="bg-navy-800 border border-blue-900 rounded-lg p-6">
-                <h3 className="font-semibold text-white mb-2">Change Password</h3>
-                <p className="text-sm text-gray-400 mb-4">Update your account password</p>
-                <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                  Change Password
-                </button>
-              </div>
-
-              <div className="bg-navy-800 border border-blue-900 rounded-lg p-6">
-                <h3 className="font-semibold text-white mb-2">Two-Factor Authentication</h3>
-                <p className="text-sm text-gray-400 mb-4">Add an extra layer of security to your account</p>
-                <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                  Enable 2FA
-                </button>
-              </div>
-
-              <div className="bg-navy-800 border border-blue-900 rounded-lg p-6">
-                <h3 className="font-semibold text-white mb-2">API Keys</h3>
-                <p className="text-sm text-gray-400 mb-4">Manage your API keys for integrations</p>
-                <button className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
-                  View API Keys
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <button
+          onClick={() => alert('Settings saved!')}
+          className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition-colors"
+        >
+          <Save className="w-5 h-5" />
+          Save Settings
+        </button>
       </div>
     </div>
   )
 }
-
-export default Settings
