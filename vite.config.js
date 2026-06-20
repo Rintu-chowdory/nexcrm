@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/nexcrm/',
+  base: process.env.VITE_BASE || '/nexcrm/',
 })
