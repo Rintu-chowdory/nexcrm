@@ -1,0 +1,9 @@
+{
+  "buildCommand": "VITE_BASE=/ npm run build",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
