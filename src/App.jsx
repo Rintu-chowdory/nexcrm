@@ -6,6 +6,7 @@ import Pipeline from './pages/Pipeline'
 import Deals from './pages/Deals'
 import Activities from './pages/Activities'
 import Settings from './pages/Settings'
+import AIComposer from './pages/AIComposer'
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/deals" element={<Deals />} />
             <Route path="/activities" element={<Activities />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/ai-composer" element={<AIComposer />} />
           </Routes>
         </div>
       </div>
