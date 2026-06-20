@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { BarChart3, Users, Zap, Briefcase, Clock, Settings, Zap as Logo } from 'lucide-react'
+import { BarChart3, Users, Zap, Briefcase, Clock, Settings, Sparkles } from 'lucide-react'
 
 const Sidebar = () => {
   const location = useLocation()
@@ -10,6 +10,7 @@ const Sidebar = () => {
     { path: '/pipeline', icon: Zap, label: 'Pipeline' },
     { path: '/deals', icon: Briefcase, label: 'Deals' },
     { path: '/activities', icon: Clock, label: 'Activities' },
+    { path: '/ai-composer', icon: Sparkles, label: 'AI Composer' },
     { path: '/settings', icon: Settings, label: 'Settings' },
   ]
 
@@ -20,7 +21,7 @@ const Sidebar = () => {
       {/* Logo */}
       <div className="p-6 border-b border-blue-900">
         <div className="flex items-center gap-2 mb-2">
-          <Logo className="w-8 h-8 text-blue-500" />
+          <Sparkles className="w-8 h-8 text-blue-500" />
           <span className="text-xl font-bold text-white">NexCRM</span>
         </div>
         <p className="text-sm text-gray-400">Customer Relations</p>
@@ -28,38 +29,31 @@ const Sidebar = () => {
 
       {/* Navigation */}
       <nav className="flex-1 px-4 py-6">
-        {navItems.map((item) => {
-          const Icon = item.icon
-          const active = isActive(item.path)
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg mb-2 transition-colors ${
-                active
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-300 hover:bg-navy-900'
-              }`}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
-            </Link>
-          )
-        })}
+        <ul className="space-y-1">
+          {navItems.map((item) => {
+            const Icon = item.icon
+            const active = isActive(item.path)
+            return (
+              <li key={item.path}>
+                <Link
+                  to={item.path}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
+                    active
+                      ? 'bg-blue-600 text-white'
+                      : 'text-gray-400 hover:text-white hover:bg-blue-900/30'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="font-medium">{item.label}</span>
+                  {item.label === 'AI Composer' && (
+                    <span className="ml-auto text-xs bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded">AI</span>
+                  )}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
       </nav>
-
-      {/* Footer */}
-      <div className="p-6 border-t border-blue-900">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
-            <span className="text-sm font-bold">JD</span>
-          </div>
-          <div>
-            <p className="text-sm font-medium">John Doe</p>
-            <p className="text-xs text-gray-400">Admin</p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
