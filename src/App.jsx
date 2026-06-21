@@ -7,6 +7,7 @@ import Deals from './pages/Deals'
 import Activities from './pages/Activities'
 import Settings from './pages/Settings'
 import AIComposer from './pages/AIComposer'
+import Datenschutz from './pages/Datenschutz'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/activities" element={<Activities />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/ai-composer" element={<AIComposer />} />
+            <Route path="/datenschutz" element={<Datenschutz />} />
           </Routes>
         </div>
       </div>
