@@ -1,13 +1,14 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import Sidebar from './components/Sidebar'
-import Dashboard from './pages/Dashboard'
-import Contacts from './pages/Contacts'
-import Pipeline from './pages/Pipeline'
-import Deals from './pages/Deals'
-import Activities from './pages/Activities'
-import Settings from './pages/Settings'
-import AIComposer from './pages/AIComposer'
-import Datenschutz from './pages/Datenschutz'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+import Sidebar from "./components/Sidebar"
+import Dashboard from "./pages/Dashboard"
+import Contacts from "./pages/Contacts"
+import Pipeline from "./pages/Pipeline"
+import Deals from "./pages/Deals"
+import Activities from "./pages/Activities"
+import Settings from "./pages/Settings"
+import AIComposer from "./pages/AIComposer"
+import Datenschutz from "./pages/Datenschutz"
+import Impressum from "./pages/Impressum"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/ai-composer" element={<AIComposer />} />
             <Route path="/datenschutz" element={<Datenschutz />} />
+            <Route path="/impressum" element={<Impressum />} />
           </Routes>
         </div>
       </div>
