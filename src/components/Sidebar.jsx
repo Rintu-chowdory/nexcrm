@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { BarChart3, Users, Zap, Briefcase, Clock, Settings, Sparkles } from 'lucide-react'
+import { BarChart3, Users, Zap, Briefcase, Clock, Settings, Sparkles, Shield } from 'lucide-react'
 
 const Sidebar = () => {
   const location = useLocation()
@@ -54,6 +54,21 @@ const Sidebar = () => {
           })}
         </ul>
       </nav>
+
+      {/* Datenschutz Link */}
+      <div className="border-t border-blue-900 px-4 py-4">
+        <Link
+          to="/datenschutz"
+          className={`flex items-center gap-2 text-xs transition-colors ${
+            isActive('/datenschutz')
+              ? 'text-blue-400'
+              : 'text-gray-500 hover:text-gray-300'
+          }`}
+        >
+          <Shield className="w-4 h-4" />
+          <span>Datenschutz</span>
+        </Link>
+      </div>
     </div>
   )
 }
