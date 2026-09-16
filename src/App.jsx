@@ -13,7 +13,7 @@ import Impressum from "./pages/Impressum"
 
 function App() {
   return (
-    <Router basename="/nexcrm">
+    <Router basename={import.meta.env.VITE_BASE || "/nexcrm"}>
       <div className="flex h-screen bg-navy-900">
         <Sidebar />
         <div className="flex-1 overflow-auto">
