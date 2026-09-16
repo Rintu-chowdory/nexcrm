@@ -24,7 +24,7 @@ export default function AIComposer() {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: 'qwen/qwen3.8-27b',
           messages: [
             { role: 'system', content: 'You are an expert sales email writer. Write concise, personalized sales emails.' },
             { role: 'user', content: `Write a ${tone.toLowerCase()} ${emailType.toLowerCase()} email to ${contact}. Keep it under 150 words.` }
